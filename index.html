@@ -6,6 +6,7 @@
 <title>St. Andrew's Valley 라운드 기록</title>
 <link rel="icon" type="image/png" href="icon192.png">
 <link rel="apple-touch-icon" href="icon192.png">
+<link rel="manifest" href="manifest.json">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,'Malgun Gothic',sans-serif;background:#eef2ee;color:#1c2e22;min-height:100vh;display:flex;flex-direction:column}
@@ -89,6 +90,7 @@ nav button{flex:1;padding:16px;font-size:17px;font-weight:800;border-radius:14px
 <div id="summary"></div>
 <div id="toast">저장됨 ✓</div>
 <script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 const HOLES=[
 {n:1,name:"First Crossing",par:4,yds:298,hcp:12,tag:"par"},
 {n:2,name:"Northern Climb",par:5,yds:492,hcp:11,tag:"on4"},
