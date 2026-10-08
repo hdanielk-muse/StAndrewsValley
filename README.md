@@ -1,1 +1,1 @@
-# StAndrewsValley
+# St Andrews Valley Golf Club
