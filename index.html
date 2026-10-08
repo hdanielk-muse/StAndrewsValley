@@ -79,7 +79,7 @@ nav button{flex:1;padding:16px;font-size:17px;font-weight:800;border-radius:14px
 <div class="ttl">St. Andrew's Valley...</div>
 <button class="cbtn" onclick="openSummary()">···</button>
 </div>
-<div class="sub"><span>2026.10.17 · WHITE TEE</span><button class="sum" onclick="openSummary()">요약</button></div>
+<div class="sub"><span>2026.10.17 · <select id="tee-sel" onchange="setTee(this.value)" style="font-size:13px;font-weight:800;color:#1d7a44;background:transparent;border:none;letter-spacing:.5px">${Object.keys(TEES).map(t=>`<option value="${t}">${t} TEE</option>`).join("")}</select></span><button class="sum" onclick="openSummary()">요약</button></div>
 <div class="pbar"><i id="pfill"></i></div>
 <main id="main"></main>
 <nav>
@@ -91,6 +91,17 @@ nav button{flex:1;padding:16px;font-size:17px;font-weight:800;border-radius:14px
 <div id="toast">저장됨 ✓</div>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+const TEES={
+GREEN:[365,530,425,187,403,222,393,468,505,575,214,366,368,575,175,602,181,478],
+GOLD:[350,520,411,179,359,212,380,454,489,562,193,353,344,554,167,576,171,443],
+BLUE:[324,515,402,171,347,195,368,431,466,556,165,335,325,530,159,560,153,420],
+WHITE:[298,492,370,159,334,173,353,403,430,531,145,315,315,515,134,529,129,404],
+RED:[242,438,338,102,314,132,331,351,414,496,110,272,306,478,116,478,106,361]
+};
+const TEE_KEY="standrews-tee";
+let tee="WHITE";
+try{const t=localStorage.getItem(TEE_KEY);if(t&&TEES[t])tee=t;}catch(e){}
+function setTee(v){tee=v;try{localStorage.setItem(TEE_KEY,v);}catch(e){}render();}
 const HOLES=[
 {n:1,name:"First Crossing",par:4,yds:298,hcp:12,tag:"par"},
 {n:2,name:"Northern Climb",par:5,yds:492,hcp:11,tag:"on4"},
@@ -111,7 +122,7 @@ const HOLES=[
 {n:17,name:"At Last",par:3,yds:129,hcp:18,tag:"par"},
 {n:18,name:"Too Much",par:4,yds:404,hcp:1,tag:"bogey"}
 ];
-const CLUBS=["드라이버","3번 우드","5번 우드","유틸리티","4번 아이언","5번 아이언","6번 아이언","7번 아이언","8번 아이언","9번 아이언","PW","GW","SW","퍼터"];
+const CLUBS=["드라이버","2번 우드","3번 우드","4번 우드","5번 우드","7번 우드","2번 유틸리티","3번 유틸리티","4번 유틸리티","5번 유틸리티","3번 아이언","4번 아이언","5번 아이언","6번 아이언","7번 아이언","8번 아이언","9번 아이언","PW","GW","SW","LW","퍼터"];
 const GEN_RES=["페어웨이","좌","우","OB"];
 const APPR_RES=["온그린","좌","우","앞","뒤"];
 const LS_KEY="standrews-round-20261017-v4";
@@ -122,9 +133,11 @@ return HOLES.map(h=>({score:null,shots:[{club:"",res:"",appr:h.par===3}]}));}
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(data));}catch(e){}}
 function render(){
 const h=HOLES[cur],d=data[cur];
+const yds=TEES[tee][cur];
 const done=data.filter(x=>x.score!=null).length;
 document.getElementById("pfill").style.width=(done/18*100)+"%";
-let html=`<div class="hole-head"><span class="hole-num">${h.n}</span><div class="hole-info"><div class="hole-name">${h.name}</div><div class="hole-spec">PAR ${h.par} · ${h.yds} YD · HDCP ${h.hcp}</div></div><button class="minus-btn" onclick="goHole(cur-1)">−</button></div>`;
+document.getElementById("tee-sel").value=tee;
+let html=`<div class="hole-head"><span class="hole-num">${h.n}</span><div class="hole-info"><div class="hole-name">${h.name}</div><div class="hole-spec">PAR ${h.par} · ${yds} YD · HDCP ${h.hcp}</div></div><button class="minus-btn" onclick="goHole(cur-1)">−</button></div>`;
 html+=`<div class="sec"><div class="score-card"><div class="score-lbl"><div class="t">스코어</div><div class="s">${d.score==null?"기록 전":scoreName(d.score,h.par)}</div></div><div class="stepper"><button onclick="chScore(-1)">−</button><span class="v">${d.score??"–"}</span><button onclick="chScore(1)">+</button></div></div></div>`;
 html+=`<div class="sec"><div class="sec-head"><span class="sec-title">샷 기록</span><button class="link" onclick="addShot()">+ 샷 추가</button></div><div id="shot-list">`;
 d.shots.forEach((s,i)=>{
