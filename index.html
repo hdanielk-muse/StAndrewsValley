@@ -88,7 +88,7 @@ nav button{flex:1;padding:16px;font-size:17px;font-weight:800;border-radius:14px
 <div class="ttl">St. Andrew's Valley...</div>
 <button class="cbtn" onclick="openHoles()">···</button>
 </div>
-<div class="sub"><span>2026.10.17 · <select id="tee-sel" onchange="setTee(this.value)"><option value="GREEN">GREEN TEE</option><option value="GOLD">GOLD TEE</option><option value="BLUE">BLUE TEE</option><option value="WHITE">WHITE TEE</option><option value="RED">RED TEE</option></select></span><button class="sum" onclick="openSummary()">요약</button></div>
+<div class="sub"><span><span id="today"></span> · <select id="tee-sel" onchange="setTee(this.value)"><option value="GREEN">GREEN TEE</option><option value="GOLD">GOLD TEE</option><option value="BLUE">BLUE TEE</option><option value="WHITE">WHITE TEE</option><option value="RED">RED TEE</option></select></span><button class="sum" onclick="openSummary()">요약</button></div>
 <div class="pbar"><i id="pfill"></i></div>
 <main id="main"></main>
 <nav>
@@ -195,6 +195,7 @@ document.getElementById("holesheet").classList.add("show");
 }
 function closeHoles(){document.getElementById("holesheet").classList.remove("show");}
 function resetAll(){if(!confirm("모든 홀의 기록을 지울까요?"))return;data=HOLES.map(h=>({score:null,shots:[{club:"",res:"",appr:h.par===3}]}));save();render();openSummary();}
+(function(){const t=new Date();const p=n=>String(n).padStart(2,"0");document.getElementById("today").textContent=t.getFullYear()+"."+p(t.getMonth()+1)+"."+p(t.getDate());})();
 render();
 </script>
 </body>
